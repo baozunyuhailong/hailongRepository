@@ -1,0 +1,7 @@
+org\xdemo\example\SpringActivemq\utils\CookieUtils.class
+org\xdemo\example\SpringActivemq\controller\ActivemqController.class
+org\xdemo\example\SpringActivemq\task\Settings.class
+org\xdemo\example\SpringActivemq\controller\SessionShareController.class
+org\xdemo\example\SpringActivemq\service\impl\DemoServiceImpl.class
+org\xdemo\example\SpringActivemq\service\DemoService.class
+org\xdemo\example\SpringActivemq\model\User.class

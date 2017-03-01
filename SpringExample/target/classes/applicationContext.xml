@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 查找最新的schemaLocation 访问 http://www.springframework.org/schema/ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd   
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+     
+     <!-- <context:annotation-config />  
+          已经在spring mvc里配置了，不能再此配置，抢占mvc优先级，因为Controller是要在springMvc加载的-->
+
+     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+     <!-- <context:component-scan base-package="org.xdemo.example.SpringActivemq.*" /> -->
+    
+     <!-- 配置扫描路径 -->
+     <context:component-scan base-package="org.xdemo.example">
+	     <!--   只扫描Service，也可以添加Repostory，但是要把Controller排除在外，Controller由spring-mvc.xml去加载 -->
+	     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+     </context:component-scan>
+
+	<!-- jasypt解密,加密解密属性文件配置的另外一种方式 -->
+	<!--   	<bean id="propertyConfigurer"
+		class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor" />
+		<property name="locations">
+			<list>
+				<value>classpath:properties/settings.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8" />
+	</bean> -->
+	
+ 	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/settings.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="false" />
+        <property name="properties" ref="configProperties" />
+    </bean>
+    
+    <!-- 20170222 -->
+    <!-- redis spring-session -->
+	<!-- 使用spring session托管session，将session放入redis中 -->
+    <bean id="redisHttpSessionConfiguration"  class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration" >
+        <property name="maxInactiveIntervalInSeconds" value="600" />
+     </bean>
+     <!-- spring-data-redis -->
+     <bean
+        class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <!-- redis 配置 -->
+        <property name="hostName" value="192.168.92.129"/>
+        <property name="port" value="6379" />
+    </bean>
+</beans>
