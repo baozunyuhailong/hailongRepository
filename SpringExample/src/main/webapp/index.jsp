@@ -1,34 +1,35 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
     String path = request.getContextPath();
-    // String basePath = request.getScheme() + "://"
-    //        + request.getServerName() + ":" + request.getServerPort()
-    //        + path + "/";
+    String baseLocalPath = request.getScheme() + "://"
+            + request.getServerName() + ":" + request.getServerPort()
+            + path + "/";
     
-    String basePath = request.getScheme() + "://www.hailong.com:8082"
+      String basePath = request.getScheme() + "://www.hailong.com:8082"
             + path + "/";
 %>
  
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<base href="<%=basePath%>">
+<base href="<%=baseLocalPath%>">
  
 <title>Test Demo程序</title>
  
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
-<script type="text/javascript" src="<%=basePath%>resources/common/js/jquery-3.1.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<%=basePath%>resources/css/index.css">
+<script type="text/javascript" src="<%=baseLocalPath%>resources/common/js/jquery-3.1.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=baseLocalPath%>resources/css/index.css">
 <script type="text/javascript">
 
 	$("#queueSender").click(function(){
 		alert("123");
 	});
 
+	// 发送文本对象
     function send(controller){
-    	 debugger;
+
         if($("#message").val()==""){
             $("#message").css("border","1px solid red");
             return;
@@ -37,11 +38,12 @@
         }
         $.ajax({
             type: 'post',
-            url:'<%=basePath%>activemq/'+controller,
+            url:'<%=basePath%>cookieShare/'+controller,
             dataType:'text', 
             data:{"message":$("#message").val()},
+            //headers : {'Authorization':'Basic bmVvd2F5Oe4lb3dheQ=='},
             success:function(data){
-        		debugger;
+
                 if(data=="suc"){
                     $("#status").html("<font color=green>发送成功</font>");
                     setTimeout(clear,1000);
@@ -51,7 +53,7 @@
                 }
             },
             error:function(data){
-        		debugger;
+
                 $("#status").html("<font color=red>ERROR:"+data["status"]+","+data["statusText"]+"</font>");
                 setTimeout(clear,5000);
             }
@@ -59,6 +61,7 @@
         });
     }
     
+    // 发送json对象
     function sendJson(controller){
 
         if($("#message").val()==""){
@@ -70,33 +73,35 @@
         var json = {
                 "message": $("#message").val(),
         };
+
         $.ajax({
-        	url:'<%=basePath%>activemq/'+controller,
+        	url:'<%=basePath%>cookieShare/'+controller,
             type: 'post',
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
+            headers : {'Authorization':'Basic bmVvd2F5Oe4lb3dheQ=='},
             dataType: 'json', 
             success:function(data){
-        		debugger;
+
                 if(data=="suc"){
                     $("#status").html("<font color=green>发送成功</font>");
                     setTimeout(clear,1000);
                 }else{
-                    $("#status").html("<font color=red>"+data+"</font>");
+                    $("#status").html("<font color=red>" + data.message +"</font>");
                     setTimeout(clear,5000);
                 }
             },
             error:function(data){
-        		debugger;
+
                 $("#status").html("<font color=red>ERROR:"+data["status"]+","+data["statusText"]+"</font>");
                 setTimeout(clear,5000);
             }
         });
     }
 
+    // 使用jsonp发送文本对象(ajax)
     function sendJsonp(controller){
 
-		debugger;
 		if($("#message").val()==""){
 		    $("#message").css("border","1px solid red");
 		    return;
@@ -105,31 +110,38 @@
 		}
 		$.ajax({
 		    type: 'GET',
-		    url:'<%=basePath%>activemq/'+controller,
+		    url:'<%=basePath%>cookieShare/'+controller,
 		    data:{"message":$("#message").val()},
             async: false,
+            //header: {'Access-Control-Allow-Origin':'http://www.hailong.com'},
+            //headers: {"P3P":"CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\""},
+            beforeSend: function(request) {
+            	request.setRequestHeader("Access-Control-Allow-Origin", "http://www.hailong.com");
+                request.setRequestHeader("P3P", "CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"");
+            },
 		    dataType: "jsonp",
-		    //jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
-            //jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
-            jsonp: "callbackparam", //服务端用于接收callback调用的function名的参数   
+		    //jsonp: "callback", //传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+            //jsonpCallback:"flightHandler", //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
+            jsonp: "callbackparam", //服务端用于接收callback调用的function名的 参数   
             jsonpCallback: "success_jsonpCallback", //callback的function名称,服务端会把名称和data一起传递回来   
 		    success:function(data){
 
 		    	 $("#status").html("<font color=red>"+ data.number +"</font>");
 		    },
 		    error:function(data){
-		    	debugger;
+
 		        $("#status").html("<font color=red>ERROR:"+data["status"]+","+data["statusText"]+"</font>");
 		        setTimeout(clear,5000);
 		    }
 		});
     }
     
+    // 使用jsonp接收文本对象
     function findJsonp(controller){
 
 		$.ajax({
 		    type: 'GET',
-		    url:'<%=basePath%>activemq/'+controller,
+		    url:'<%=basePath%>cookieShare/'+controller,
 		    //data:{"message":$("#message").val()},
             async: false,
 		    dataType: "jsonp",
@@ -142,13 +154,14 @@
 		    	 $("#status").html("<font color=red>" + data.name + ":" + data.value +"</font>");
 		    },
 		    error:function(data){
-		    	debugger;
+
 		        $("#status").html("<font color=red>ERROR:"+data["status"]+","+data["statusText"]+"</font>");
 		        setTimeout(clear,5000);
 		    }
 		});
     }
 
+    // 使用jsonp发送文本对象(findJsonp)
     function sendGetJSON(controller){
 
 		if($("#message").val()==""){
@@ -158,10 +171,10 @@
 		    $("#message").css("border","1px solid gray");
 		}
 		var message = $("#message").val();
- 		$.getJSON('<%=basePath%>activemq/' + controller + '?message=' + message  + '&jsoncallback=?', function(data){
+ 		$.getJSON('<%=basePath%>cookieShare/' + controller + '?message=' + message  + '&jsoncallback=?', function(data){
  			$("#status").html("<font color=red>"+ data.number +"</font>");
 		});
-/* 		$.getJSON('activemq/sendGetJSON.json?type=1&jsoncallback=?', function(status){
+/* 		$.getJSON('cookieShare/sendGetJSON.json?type=1&jsoncallback=?', function(status){
 			  alert("123");
 		}); */
     }
