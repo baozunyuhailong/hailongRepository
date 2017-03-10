@@ -26,15 +26,13 @@
     <mvc:resources location="/resources/" mapping="/resources/**"/>
 
     <!-- 指定Sping组件扫描的基本包路径 -->
-    <context:component-scan base-package="org.xdemo.example" >
+    <context:component-scan base-package="org.xdemo.example.*" >
         <!-- 这里只扫描Controller，不可重复加载Service -->
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
 <!-- 关于ajax中json传值配置 StringHttpMessageConverter bean
-
 	 <bean id = "stringHttpMessageConverter" class = "org.springframework.http.converter.StringHttpMessageConverter"/>
-
           启动Spring MVC的注解功能，完成请求和注解POJO的映射
      <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
         <property name="messageConverters">  
@@ -67,10 +65,13 @@
     </mvc:annotation-driven>
 
     <!-- JSP视图解析器-->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-        <property name="prefix" value="/WEB-INF/views/" />
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
-        <property name="order" value="1" />
     </bean>
 
+	<bean class="org.apache.solr.client.solrj.impl.HttpSolrServer">
+		<constructor-arg value="http://192.168.92.129:8080/solr/"></constructor-arg>
+	</bean>
 </beans>

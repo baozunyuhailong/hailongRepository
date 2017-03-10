@@ -17,7 +17,7 @@
      <!-- <context:component-scan base-package="org.xdemo.example.SpringActivemq.*" /> -->
     
      <!-- 配置扫描路径 -->
-     <context:component-scan base-package="org.xdemo.example">
+     <context:component-scan base-package="org.xdemo.example.*">
 	     <!--   只扫描Service，也可以添加Repostory，但是要把Controller排除在外，Controller由spring-mvc.xml去加载 -->
 	     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
      </context:component-scan>

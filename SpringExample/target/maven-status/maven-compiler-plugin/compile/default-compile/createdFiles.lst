@@ -1,7 +1,15 @@
+org\xdemo\example\SpringActivemq\model\QueryVo.class
 org\xdemo\example\SpringActivemq\utils\CookieUtils.class
-org\xdemo\example\SpringActivemq\controller\ActivemqController.class
+org\xdemo\example\SpringActivemq\mapper\impl\ProductMapperImpl.class
+org\xdemo\example\SpringActivemq\service\impl\ProductServiceImpl.class
 org\xdemo\example\SpringActivemq\task\Settings.class
+org\xdemo\example\SpringActivemq\controller\CookieShareController.class
+org\xdemo\example\SpringActivemq\mapper\ProductMapper.class
+org\xdemo\example\SpringActivemq\model\ResultModel.class
 org\xdemo\example\SpringActivemq\controller\SessionShareController.class
 org\xdemo\example\SpringActivemq\service\impl\DemoServiceImpl.class
 org\xdemo\example\SpringActivemq\service\DemoService.class
+org\xdemo\example\SpringActivemq\controller\ProductController.class
+org\xdemo\example\SpringActivemq\service\ProductService.class
+org\xdemo\example\SpringActivemq\model\Product.class
 org\xdemo\example\SpringActivemq\model\User.class
